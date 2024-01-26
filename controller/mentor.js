@@ -201,7 +201,8 @@ const mentordetail = (req, res) => {
   try {
     res.status(200).send({
       message: "I am details of the mentor",
-      mentor,
+      mentor:mentor,
+      student:student
     });
   } catch (error) {}
 };
