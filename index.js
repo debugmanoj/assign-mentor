@@ -1,9 +1,17 @@
 import express from "express"
+import dotenv from 'dotenv'
+import databaseConnect from "./database/databaseConnect.js"
+dotenv.config()
 let app=express();
+let PORT=process.env.PORT
 import RootRoute from "./Route/RootRoute.js"
-let PORT=process.env.port||8000
+
+
 
 app.use(express.json())
 app.use("/",RootRoute)
 
+
 app.listen(PORT,()=>console.log(`I started the app on port ${PORT} 😊`))
+
+
