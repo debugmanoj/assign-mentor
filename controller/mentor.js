@@ -153,17 +153,17 @@ async function findChangeMentor() {
 
 const changeMentor =async (req, res) => {
   const name= req.params.name;
-
+  let value=[]
   const student = await studentSchema.findOne({Name:name});
   if(student!=null){
     let mentorResult =await findChangeMentor();
+    console.log(mentorResult);
     if (mentorResult != null){
-      let result = {
+      let  result = {
                 mentor: mentorResult,
                 studentName: student.Name,
                    };
-
-    const value=result
+                   value.push(result)
     }
 
   }
@@ -192,13 +192,13 @@ const changeMentor =async (req, res) => {
   } catch (error) {}
 };
 
+
 async function  findStudent(keyCourse) {
   const studentList = await studentSchema.find()
-  let result=[]
+  let result= await []
   for (let i = 0; i < studentList.length; i++) {
-    console.log(keyCourse);
     if ( keyCourse == studentList[i].keyCourse) {
-      console.log(studentList[i]);
+      console.log(keyCourse);
       // console.log(student[i].Name);
       // student[i].student.push(studentName)
       result.push(student[i].Name)
@@ -206,27 +206,32 @@ async function  findStudent(keyCourse) {
       
     }
   }
+  console.log(result);
   return result;
 }
 
 const mentorAndStudent = async(req, res) => {
   const mentorList = await MentorModel.find()
-  const updatedMentor = await Promise.all(mentorList.map(async (val) => {
+  const updatedMentor = await Promise.all(
+    mentorList.map(async (val) => {
+
     if (val.keyCourse == "Guvi" || val.keyCourse == "data") {
       const studentName = await findStudent(val.keyCourse);
+     
       val.students.push(studentName);
       // console.log(studentName);
       await val.save();
       return{
-        name: val.name,
-        course: val.course,
-        students: studentName,
+        name: val.name,//Metnor Name
+        course: val.course,//Course name
+        students: studentName,//Student name
       }
       
       // Return the mentor object with studentName
       // return { name: val.name, course: val.course, student: studentName };
     }
-  }));
+  })
+  );
 
 
 
@@ -253,7 +258,6 @@ const mentorAndStudent = async(req, res) => {
 
 const mentordetail = async(req, res) => {
   const mentorList = await MentorModel.find()
-  console.log(mentorList);
   try {
     res.status(200).send({
       message: "Mentor List",
@@ -290,7 +294,6 @@ const studentcreate = async(req, res) => {
 };
 
 const studentdetail = async(req, res) => {
-
   const studentList = await studentSchema.find()
 
   try {
